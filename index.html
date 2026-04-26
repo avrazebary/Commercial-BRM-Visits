@@ -44,14 +44,15 @@ header.top {
   padding: 14px 18px;
   margin-bottom: 22px;
   display: flex;
-  gap: 20px;
+  gap: 16px; /* Reduced gap slightly to fit dates well */
   align-items: center;
   flex-wrap: wrap;
 }
-.filter-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
+.filter-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 130px; }
 .filter-group label { font-size: 11px; font-weight: 600; color: #6b7591; text-transform: uppercase; letter-spacing: 0.04em; }
-.filter-group select { padding: 8px 12px; border: 1px solid #dde1ec; border-radius: 6px; font-size: 13px; color: #1a1f36; background: #fdfdfd; cursor: pointer; outline: none; }
-.filter-group select:focus { border-color: #3a52d6; }
+/* Added styling for input type="date" */
+.filter-group select, .filter-group input[type="date"] { padding: 8px 12px; border: 1px solid #dde1ec; border-radius: 6px; font-size: 13px; color: #1a1f36; background: #fdfdfd; cursor: pointer; outline: none; font-family: inherit;}
+.filter-group select:focus, .filter-group input[type="date"]:focus { border-color: #3a52d6; }
 
 .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
 .kpi { background: #ffffff; border: 1px solid #e6e8ef; border-radius: 10px; padding: 16px 18px; }
@@ -145,6 +146,14 @@ footer.foot a { color: #3a52d6; text-decoration: none; }
 
 <div class="filter-bar">
   <div class="filter-group">
+    <label>Start Date</label>
+    <input type="date" id="filter-date-start" onchange="applyFilters()">
+  </div>
+  <div class="filter-group">
+    <label>End Date</label>
+    <input type="date" id="filter-date-end" onchange="applyFilters()">
+  </div>
+  <div class="filter-group">
     <label>Region</label>
     <select id="filter-region" onchange="applyFilters()">
       <option value="All">All Regions</option>
@@ -236,7 +245,7 @@ footer.foot a { color: #3a52d6; text-decoration: none; }
     </div>
   </div>
   <div class="card">
-    <h3>Active BRMs (All)</h3>
+    <h3>Active BRMs (Filtered)</h3>
     <div class="sub">Full leaderboard of field representatives.</div>
     <div class="scroll-area">
       <table class="tbl">
@@ -349,17 +358,26 @@ async function loadData() {
 }
 
 // ============================================================
-// FILTERS
+// FILTERS (Now With Dates)
 // ============================================================
 function initFilters() {
   const regions = new Set();
   const brms = new Set();
+  let minTs = Infinity, maxTs = -Infinity;
   
   GLOBAL_ROWS.forEach(r => {
     const reg = classifyRegion(r[COL_MAP.region]);
     const brm = normalize(r[COL_MAP.brm]);
+    const ts = parseTimestamp(r[COL_MAP.ts]);
+
     if (reg) regions.add(reg);
     if (brm) brms.add(brm);
+
+    if (ts) {
+      const time = ts.getTime();
+      if (time < minTs) minTs = time;
+      if (time > maxTs) maxTs = time;
+    }
   });
 
   const regSelect = document.getElementById('filter-region');
@@ -370,19 +388,40 @@ function initFilters() {
 
   [...regions].sort().forEach(r => regSelect.add(new Option(r, r)));
   [...brms].sort().forEach(b => brmSelect.add(new Option(b, b)));
+
+  // Setup initial dates
+  if (minTs !== Infinity) {
+      const minDt = new Date(minTs);
+      const maxDt = new Date(maxTs);
+      // Ensure YYYY-MM-DD format for input value
+      document.getElementById('filter-date-start').value = minDt.toISOString().split('T')[0];
+      document.getElementById('filter-date-end').value = maxDt.toISOString().split('T')[0];
+  }
 }
 
 function applyFilters() {
+  const fStart = document.getElementById('filter-date-start').value;
+  const fEnd = document.getElementById('filter-date-end').value;
   const fReg = document.getElementById('filter-region').value;
   const fBrm = document.getElementById('filter-brm').value;
   const fKyc = document.getElementById('filter-kyc').value;
+
+  const startDt = fStart ? new Date(fStart) : null;
+  const endDt = fEnd ? new Date(fEnd) : null;
+  // Ensure the end date covers the entire day until 11:59:59 PM
+  if (endDt) endDt.setHours(23, 59, 59, 999);
 
   const filtered = GLOBAL_ROWS.filter(r => {
     const rReg = classifyRegion(r[COL_MAP.region]);
     const rBrm = normalize(r[COL_MAP.brm]);
     const rKyc = classifyKYC(r[COL_MAP.kyc]);
+    const rTs = parseTimestamp(r[COL_MAP.ts]);
 
     if (!rReg) return false;
+
+    // Date checks
+    if (startDt && rTs && rTs < startDt) return false;
+    if (endDt && rTs && rTs > endDt) return false;
 
     const matchReg = (fReg === 'All' || rReg === fReg);
     const matchBrm = (fBrm === 'All' || rBrm === fBrm);
@@ -460,11 +499,9 @@ function computeMetrics(rows) {
     else if (kyc === 'No KYC') totalNoKYC++;
 
     if (ts) {
-      // Monthly aggregation
       const monthKey = ts.getFullYear() + '-' + String(ts.getMonth()+1).padStart(2,'0');
       byMonth[monthKey] = (byMonth[monthKey] || 0) + 1;
 
-      // Daily aggregation
       const dayKey = ts.getFullYear() + '-' + String(ts.getMonth()+1).padStart(2,'0') + '-' + String(ts.getDate()).padStart(2,'0');
       byDay[dayKey] = (byDay[dayKey] || 0) + 1;
     }
@@ -548,35 +585,43 @@ function render(m) {
     options: { responsive: true, maintainAspectRatio: false, cutout: '62%' }
   });
 
-  // DAILY TREND CHART
+  // DAILY TREND CHART (Single Clean Line)
   destroyChart('daily');
   const dayLabels = m.dayKeys.map(k => {
     const [y, mo, d] = k.split('-');
     return new Date(+y, +mo - 1, +d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
+  
   charts.daily = new Chart(document.getElementById('dailyChart'), {
     type: 'line',
     data: {
       labels: dayLabels,
       datasets: [{
-        label: 'Visits',
+        label: 'Total Visits',
         data: m.dayKeys.map(k => m.byDay[k]),
         borderColor: COLORS.blue,
-        backgroundColor: 'rgba(58, 82, 214, 0.1)',
+        backgroundColor: 'rgba(58, 82, 214, 0.15)', // Smooth blue fill
         borderWidth: 2,
         fill: true,
-        pointRadius: 3,
-        pointBackgroundColor: COLORS.blue,
-        tension: 0.3
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#ffffff',
+        pointBorderColor: COLORS.blue,
+        pointBorderWidth: 2,
+        tension: 0.4 // Smooth bezier curves
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
+      plugins: { 
+        legend: { display: false },
+        tooltip: { mode: 'index', intersect: false }
+      },
       scales: {
         x: { grid: { display: false }, ticks: { font: { size: 11 }, maxTicksLimit: 15 } },
         y: { beginAtZero: true, grid: { color: '#eef1f6' }, ticks: { font: { size: 11 } } }
-      }
+      },
+      interaction: { mode: 'nearest', axis: 'x', intersect: false }
     }
   });
 
