@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Business Visits — 2026 CBO Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  background: #f6f7fb;
+  color: #1a1f36;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 24px 20px 48px; }
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid #e6e8ef;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.title-block h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.01em;
+}
+.title-block .subtitle {
+  font-size: 13px;
+  color: #5f6b85;
+}
+.meta {
+  text-align: right;
+  font-size: 12px;
+  color: #6b7591;
+  line-height: 1.6;
+}
+.meta .badge {
+  display: inline-block;
+  background: #eef1ff;
+  color: #3a52d6;
+  padding: 3px 9px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #3a52d6;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.15s;
+}
+.refresh-btn:hover { background: #2c40b5; }
+.refresh-btn:disabled { background: #aab1c8; cursor: wait; }
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.kpi {
+  background: #ffffff;
+  border: 1px solid #e6e8ef;
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.kpi .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7591;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.kpi .value {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #1a1f36;
+}
+.kpi .delta {
+  font-size: 11px;
+  color: #5f6b85;
+  margin-top: 4px;
+}
+.kpi.accent-blue { border-top: 3px solid #3a52d6; }
+.kpi.accent-green { border-top: 3px solid #1f9d55; }
+.kpi.accent-amber { border-top: 3px solid #d97706; }
+.kpi.accent-purple { border-top: 3px solid #7c3aed; }
+
+.row { display: grid; gap: 14px; margin-bottom: 14px; }
+.row.two { grid-template-columns: 2fr 1fr; }
+.row.eq  { grid-template-columns: 1fr 1fr; }
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e6e8ef;
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.card h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #1a1f36;
+}
+.card .sub {
+  font-size: 11px;
+  color: #6b7591;
+  margin-bottom: 12px;
+}
+.chart-wrap { position: relative; width: 100%; }
+.chart-wrap.h220 { height: 220px; }
+.chart-wrap.h260 { height: 260px; }
+.chart-wrap.h300 { height: 300px; }
+
+table.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+table.tbl th, table.tbl td {
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 1px solid #eff1f6;
+}
+table.tbl th {
+  font-weight: 600;
+  color: #6b7591;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+table.tbl td.num, table.tbl th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.tbl tbody tr:hover { background: #fafbff; }
+.bar-cell {
+  display: inline-block;
+  height: 8px;
+  background: linear-gradient(90deg, #3a52d6, #6b7eff);
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.region-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.r-erbil { background: #eef2ff; color: #3a52d6; }
+.r-suly  { background: #ecfdf5; color: #047857; }
+.r-mosul { background: #fef3c7; color: #92400e; }
+.r-duhok { background: #ede9fe; color: #6d28d9; }
+.r-kirkuk{ background: #fee2e2; color: #b91c1c; }
+.r-other { background: #f3f4f6; color: #4b5563; }
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(246, 247, 251, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  flex-direction: column;
+  gap: 14px;
+}
+.loading-overlay.hidden { display: none; }
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #dde1ec;
+  border-top-color: #3a52d6;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: #5f6b85; }
+
+.error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  display: none;
+}
+.error-banner.show { display: block; }
+
+footer.foot {
+  margin-top: 18px;
+  font-size: 11px;
+  color: #8a93ad;
+  text-align: center;
+  line-height: 1.6;
+}
+footer.foot a { color: #3a52d6; text-decoration: none; }
+
+@media (max-width: 880px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .row.two, .row.eq { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loader">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Fetching the latest data from Google Sheets…</div>
+</div>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="title-block">
+    <h1>Daily Business Visits — 2026 Dashboard</h1>
+    <div class="subtitle">Executive view for the Chief Business Officer · Field BRM activity across Iraq / Kurdistan Region</div>
+  </div>
+  <div class="meta">
+    <div class="badge">LIVE · YTD 2026</div>
+    <div>Source: <em>Daily Visit 2026 - Business</em></div>
+    <div id="lastUpdated">Last updated: —</div>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadData()">↻ Refresh data</button>
+  </div>
+</header>
+
+<div class="error-banner" id="errorBanner"></div>
+
+<!-- KPI cards -->
+<div class="kpi-grid">
+  <div class="kpi accent-blue">
+    <div class="label">Total Visits YTD</div>
+    <div class="value" id="kpi-total">—</div>
+    <div class="delta" id="kpi-total-sub">—</div>
+  </div>
+  <div class="kpi accent-green">
+    <div class="label">KYC Completed</div>
+    <div class="value" id="kpi-completed">—</div>
+    <div class="delta">Fully onboarded merchants</div>
+  </div>
+  <div class="kpi accent-amber">
+    <div class="label">KYC Incomplete</div>
+    <div class="value" id="kpi-incomplete">—</div>
+    <div class="delta">Pending docs / follow-up required</div>
+  </div>
+  <div class="kpi accent-purple">
+    <div class="label">No KYC Started</div>
+    <div class="value" id="kpi-nokyc">—</div>
+    <div class="delta">Highest opportunity for re-engagement</div>
+  </div>
+</div>
+
+<!-- Row: Regional + Donut -->
+<div class="row two">
+  <div class="card">
+    <h3>Visits by Region — KYC Outcome</h3>
+    <div class="sub">Stacked totals show where field activity is concentrated and how outcomes vary across regions.</div>
+    <div class="chart-wrap h300"><canvas id="regionChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Overall KYC Status</h3>
+    <div class="sub">Share of all visits by KYC outcome.</div>
+    <div class="chart-wrap h300"><canvas id="kycDonut"></canvas></div>
+  </div>
+</div>
+
+<!-- Row: Monthly trend + completion rate -->
+<div class="row two">
+  <div class="card">
+    <h3>Monthly Visit Trend</h3>
+    <div class="sub">Daily visits aggregated by month from form timestamps.</div>
+    <div class="chart-wrap h260"><canvas id="monthlyChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>KYC Completion Rate by Region</h3>
+    <div class="sub">% of regional visits that resulted in completed KYC.</div>
+    <div class="chart-wrap h260"><canvas id="rateChart"></canvas></div>
+  </div>
+</div>
+
+<!-- Row: Categories + BRM leaderboard -->
+<div class="row eq">
+  <div class="card">
+    <h3>Top Business Categories</h3>
+    <div class="sub">Most-visited merchant categories across the field force.</div>
+    <table class="tbl">
+      <thead><tr><th>Category</th><th class="num">Share</th><th class="num">Volume</th></tr></thead>
+      <tbody id="catBody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Most Active BRMs</h3>
+    <div class="sub">Field representatives with the highest visit volume.</div>
+    <table class="tbl">
+      <thead><tr><th>BRM</th><th>Region</th><th class="num">Visits</th></tr></thead>
+      <tbody id="brmBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Row: Account type + Region table -->
+<div class="row eq">
+  <div class="card">
+    <h3>New vs. Existing Accounts</h3>
+    <div class="sub">Mix of acquisition (new) versus servicing/expansion (existing) visits.</div>
+    <div class="chart-wrap h220"><canvas id="acctChart"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Region Detail</h3>
+    <div class="sub">Live totals computed from the source sheet.</div>
+    <table class="tbl">
+      <thead>
+        <tr><th>Region</th><th class="num">Completed</th><th class="num">Incomplete</th><th class="num">No KYC</th><th class="num">Total</th></tr>
+      </thead>
+      <tbody id="regionBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer class="foot">
+  Live data from <a href="https://docs.google.com/spreadsheets/d/1SzaRHz9s5Ri8mV2B1qMKl7txwOm6i718wUhXAgGDLbQ/edit?usp=sharing" target="_blank">Daily Visit 2026 - Business</a> ·
+  Dashboard refreshes from the sheet on every page load.
+</footer>
+
+</div>
+
+<script>
+// ============================================================
+// CONFIG — Google Sheets live data source
+// ============================================================
+const SHEET_ID = '1SzaRHz9s5Ri8mV2B1qMKl7txwOm6i718wUhXAgGDLbQ';
+// gviz CSV endpoint - fetches the first sheet of a "anyone with the link can view" Google Sheet
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Form%20Responses%201`;
+
+const COLORS = {
+  completed: '#1f9d55',
+  incomplete: '#d97706',
+  noKyc:     '#7c3aed',
+  blue:      '#3a52d6',
+  blueLight: '#6b7eff',
+  gray:      '#cfd4e2'
+};
+const REGION_ORDER = ['Suly', 'Erbil', 'Mosul', 'Duhok', 'Kirkuk'];
+const REGION_PILL = { 'Suly':'r-suly','Erbil':'r-erbil','Mosul':'r-mosul','Duhok':'r-duhok','Kirkuk':'r-kirkuk' };
+
+// Track Chart.js instances so we can destroy/redraw on refresh
+const charts = {};
+
+// ============================================================
+// LOAD + PARSE
+// ============================================================
+async function loadData() {
+  const loader = document.getElementById('loader');
+  const errBanner = document.getElementById('errorBanner');
+  const btn = document.getElementById('refreshBtn');
+  loader.classList.remove('hidden');
+  errBanner.classList.remove('show');
+  btn.disabled = true;
+  document.getElementById('loadingText').textContent = 'Fetching the latest data from Google Sheets…';
+
+  try {
+    const resp = await fetch(SHEET_URL, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} — sheet may not be shared "anyone with link can view"`);
+    const csv = await resp.text();
+
+    document.getElementById('loadingText').textContent = 'Parsing rows…';
+    const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
+    if (!parsed.data || !parsed.data.length) throw new Error('Sheet returned no rows');
+
+    document.getElementById('loadingText').textContent = 'Computing metrics…';
+    const rows = parsed.data;
+    const metrics = computeMetrics(rows);
+    render(metrics);
+
+    const now = new Date();
+    document.getElementById('lastUpdated').textContent = 'Last updated: ' + now.toLocaleString();
+    loader.classList.add('hidden');
+  } catch (err) {
+    console.error(err);
+    errBanner.textContent = '⚠ Could not load live data: ' + err.message + '. Make sure the Google Sheet sharing is set to "Anyone with the link · Viewer".';
+    errBanner.classList.add('show');
+    loader.classList.add('hidden');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ============================================================
+// METRICS — aggregations
+// ============================================================
+function normalize(v) { return (v == null ? '' : String(v)).trim(); }
+
+function classifyKYC(v) {
+  const s = normalize(v).toLowerCase();
+  if (!s) return null;
+  if (s.startsWith('comple')) return 'Completed';
+  if (s.startsWith('incomp')) return 'Incomplete';
+  if (s.startsWith('no'))     return 'No KYC';
+  return null;
+}
+
+function classifyRegion(v) {
+  const s = normalize(v);
+  if (!s) return null;
+  const lc = s.toLowerCase();
+  if (lc.includes('erbil') || lc === 'hawler') return 'Erbil';
+  if (lc.includes('suly')  || lc.includes('sulay') || lc.includes('sulai')) return 'Suly';
+  if (lc.includes('mosul') || lc.includes('musul') || lc.includes('nineve')) return 'Mosul';
+  if (lc.includes('duhok') || lc.includes('dohuk')) return 'Duhok';
+  if (lc.includes('kirkuk')) return 'Kirkuk';
+  return s;
+}
+
+function classifyAcctType(v) {
+  const s = normalize(v).toLowerCase();
+  if (s.startsWith('new')) return 'New';
+  if (s.startsWith('exist')) return 'Existing';
+  return null;
+}
+
+function parseTimestamp(v) {
+  // Format observed: "12/24/2025 18:30:55" (M/D/YYYY)
+  const s = normalize(v);
+  if (!s) return null;
+  // Try Date.parse fallback first for ISO-like
+  const d = new Date(s);
+  if (!isNaN(d)) return d;
+  // Manual M/D/YYYY parsing
+  const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return new Date(+m[3], +m[1]-1, +m[2]);
+  return null;
+}
+
+function computeMetrics(rows) {
+  // Identify columns by header (Google Sheets gviz CSV preserves headers)
+  const sample = rows[0] || {};
+  const headers = Object.keys(sample);
+  const findHeader = (keywords) => {
+    const lower = keywords.map(k => k.toLowerCase());
+    return headers.find(h => {
+      const hl = h.toLowerCase();
+      return lower.every(k => hl.includes(k));
+    });
+  };
+  const COL_TS       = findHeader(['column']) || headers[0]; // first column is timestamp
+  const COL_REGION   = findHeader(['region']);
+  const COL_BRM      = findHeader(['brm']) || findHeader(['responsible']);
+  const COL_CAT      = findHeader(['business','category']);
+  const COL_KYC      = findHeader(['kyc','status']);
+  const COL_ACCTYPE  = findHeader(['account','type']);
+
+  const byRegion = {};
+  const byMonth  = {};
+  const byCat    = {};
+  const byBRM    = {};
+  let totalCompleted = 0, totalIncomplete = 0, totalNoKYC = 0, totalAcctNew = 0, totalAcctExisting = 0;
+  let totalRows = 0;
+
+  rows.forEach(r => {
+    // Skip blank/summary rows (heuristic: needs a region or timestamp)
+    const region = classifyRegion(r[COL_REGION]);
+    const ts = parseTimestamp(r[COL_TS]);
+    if (!region && !ts) return;
+    if (!region) return; // Region is required for almost all charts
+    totalRows++;
+
+    // KYC
+    const kyc = classifyKYC(r[COL_KYC]);
+    if (!byRegion[region]) byRegion[region] = { Completed: 0, Incomplete: 0, 'No KYC': 0, total: 0 };
+    byRegion[region].total++;
+    if (kyc) {
+      byRegion[region][kyc]++;
+      if (kyc === 'Completed') totalCompleted++;
+      else if (kyc === 'Incomplete') totalIncomplete++;
+      else if (kyc === 'No KYC') totalNoKYC++;
+    }
+
+    // Monthly bucket
+    if (ts) {
+      const key = ts.getFullYear() + '-' + String(ts.getMonth()+1).padStart(2,'0');
+      byMonth[key] = (byMonth[key] || 0) + 1;
+    }
+
+    // Category
+    const cat = normalize(r[COL_CAT]);
+    if (cat) byCat[cat] = (byCat[cat] || 0) + 1;
+
+    // BRM
+    const brm = normalize(r[COL_BRM]);
+    if (brm) {
+      if (!byBRM[brm]) byBRM[brm] = { name: brm, region, visits: 0, regions: {} };
+      byBRM[brm].visits++;
+      byBRM[brm].regions[region] = (byBRM[brm].regions[region] || 0) + 1;
+    }
+
+    // Account type
+    const acct = classifyAcctType(r[COL_ACCTYPE]);
+    if (acct === 'New') totalAcctNew++;
+    else if (acct === 'Existing') totalAcctExisting++;
+  });
+
+  // BRM dominant region
+  Object.values(byBRM).forEach(b => {
+    let best = null, bestCount = 0;
+    for (const [r, c] of Object.entries(b.regions)) {
+      if (c > bestCount) { best = r; bestCount = c; }
+    }
+    b.region = best;
+  });
+
+  // Sort categories & BRMs
+  const catList = Object.entries(byCat)
+    .map(([name, vol]) => ({ name, vol }))
+    .sort((a, b) => b.vol - a.vol)
+    .slice(0, 10);
+
+  const brmList = Object.values(byBRM)
+    .sort((a, b) => b.visits - a.visits)
+    .slice(0, 10);
+
+  // Sort months chronologically
+  const monthKeys = Object.keys(byMonth).sort();
+
+  return {
+    totalRows,
+    totalCompleted, totalIncomplete, totalNoKYC,
+    totalAcctNew, totalAcctExisting,
+    byRegion, monthKeys, byMonth,
+    catList, brmList,
+    nRegions: Object.keys(byRegion).length,
+    nBRMs: Object.keys(byBRM).length
+  };
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function fmt(n) { return n.toLocaleString(); }
+function pct(n, total) { return total ? (n/total*100).toFixed(1) + '%' : '—'; }
+function destroyChart(key) { if (charts[key]) { charts[key].destroy(); delete charts[key]; } }
+
+function render(m) {
+  // KPIs
+  document.getElementById('kpi-total').textContent = fmt(m.totalRows);
+  document.getElementById('kpi-total-sub').textContent =
+    `Across ${m.nRegions} regions · ${m.nBRMs} active BRMs · ${m.catList.length}+ categories`;
+  document.getElementById('kpi-completed').innerHTML =
+    fmt(m.totalCompleted) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalCompleted, m.totalRows)}</span>`;
+  document.getElementById('kpi-incomplete').innerHTML =
+    fmt(m.totalIncomplete) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalIncomplete, m.totalRows)}</span>`;
+  document.getElementById('kpi-nokyc').innerHTML =
+    fmt(m.totalNoKYC) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalNoKYC, m.totalRows)}</span>`;
+
+  // Region order: known first, then any extras by total desc
+  const knownRegions = REGION_ORDER.filter(r => m.byRegion[r]);
+  const extraRegions = Object.keys(m.byRegion).filter(r => !REGION_ORDER.includes(r))
+    .sort((a,b) => m.byRegion[b].total - m.byRegion[a].total);
+  const regions = knownRegions.concat(extraRegions);
+
+  // Region stacked bar
+  destroyChart('region');
+  charts.region = new Chart(document.getElementById('regionChart'), {
+    type: 'bar',
+    data: {
+      labels: regions,
+      datasets: [
+        { label: 'Completed',  data: regions.map(r => m.byRegion[r].Completed),    backgroundColor: COLORS.completed },
+        { label: 'Incomplete', data: regions.map(r => m.byRegion[r].Incomplete),   backgroundColor: COLORS.incomplete },
+        { label: 'No KYC',     data: regions.map(r => m.byRegion[r]['No KYC']),    backgroundColor: COLORS.noKyc }
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { footer: (items) => 'Total: ' + items.reduce((s,i)=>s+i.parsed.x,0) } }
+      },
+      scales: {
+        x: { stacked: true, grid: { color: '#eef1f6' }, ticks: { font: { size: 11 } } },
+        y: { stacked: true, grid: { display: false }, ticks: { font: { size: 12, weight: '600' } } }
+      }
+    }
+  });
+
+  // KYC donut
+  destroyChart('kyc');
+  charts.kyc = new Chart(document.getElementById('kycDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Completed', 'Incomplete', 'No KYC'],
+      datasets: [{
+        data: [m.totalCompleted, m.totalIncomplete, m.totalNoKYC],
+        backgroundColor: [COLORS.completed, COLORS.incomplete, COLORS.noKyc],
+        borderWidth: 2, borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '62%',
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { label: (c) => `${c.label}: ${fmt(c.parsed)} (${pct(c.parsed, m.totalRows)})` } }
+      }
+    }
+  });
+
+  // Monthly trend
+  destroyChart('monthly');
+  const monthLabels = m.monthKeys.map(k => {
+    const [y, mo] = k.split('-');
+    const dt = new Date(+y, +mo - 1, 1);
+    return dt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  });
+  charts.monthly = new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+      labels: monthLabels,
+      datasets: [{
+        label: 'Visits',
+        data: m.monthKeys.map(k => m.byMonth[k]),
+        backgroundColor: COLORS.blue,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        y: { beginAtZero: true, grid: { color: '#eef1f6' }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Completion rate by region
+  destroyChart('rate');
+  const ratePct = regions.map(r => {
+    const reg = m.byRegion[r];
+    return reg.total ? +(reg.Completed / reg.total * 100).toFixed(1) : 0;
+  });
+  charts.rate = new Chart(document.getElementById('rateChart'), {
+    type: 'bar',
+    data: {
+      labels: regions,
+      datasets: [{
+        label: 'KYC Completion %',
+        data: ratePct,
+        backgroundColor: ratePct.map(v => v >= 70 ? COLORS.completed : v >= 40 ? COLORS.blue : COLORS.incomplete),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.parsed.y + '% completed' } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 11, weight: '600' } } },
+        y: { beginAtZero: true, max: 100, grid: { color: '#eef1f6' }, ticks: { callback: v => v + '%', font: { size: 11 } } }
+      }
+    }
+  });
+
+  // Categories
+  const catBody = document.getElementById('catBody');
+  catBody.innerHTML = '';
+  const maxCat = Math.max(...m.catList.map(c => c.vol), 1);
+  m.catList.forEach(c => {
+    const share = (c.vol / m.totalRows * 100);
+    const w = Math.max(8, (c.vol / maxCat) * 100);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${c.name}</td>
+      <td class="num">${share.toFixed(1)}%</td>
+      <td class="num"><span class="bar-cell" style="width:${w*0.8}px"></span>${fmt(c.vol)}</td>`;
+    catBody.appendChild(tr);
+  });
+
+  // BRMs
+  const brmBody = document.getElementById('brmBody');
+  brmBody.innerHTML = '';
+  m.brmList.forEach(b => {
+    const pill = REGION_PILL[b.region] || 'r-other';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${b.name}</td>
+      <td><span class="region-pill ${pill}">${b.region || '—'}</span></td>
+      <td class="num"><strong>${fmt(b.visits)}</strong></td>`;
+    brmBody.appendChild(tr);
+  });
+
+  // Account type
+  destroyChart('acct');
+  charts.acct = new Chart(document.getElementById('acctChart'), {
+    type: 'bar',
+    data: {
+      labels: ['New Accounts', 'Existing Accounts'],
+      datasets: [{
+        label: 'Visits',
+        data: [m.totalAcctNew, m.totalAcctExisting],
+        backgroundColor: [COLORS.blue, COLORS.blueLight],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (c) => `${fmt(c.parsed.x)} visits (${pct(c.parsed.x, m.totalAcctNew + m.totalAcctExisting)})` } }
+      },
+      scales: {
+        x: { beginAtZero: true, grid: { color: '#eef1f6' }, ticks: { font: { size: 11 } } },
+        y: { grid: { display: false }, ticks: { font: { size: 12, weight: '600' } } }
+      }
+    }
+  });
+
+  // Region table
+  const regionBody = document.getElementById('regionBody');
+  regionBody.innerHTML = '';
+  regions.forEach(r => {
+    const reg = m.byRegion[r];
+    const pill = REGION_PILL[r] || 'r-other';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="region-pill ${pill}">${r}</span></td>
+      <td class="num">${fmt(reg.Completed)}</td>
+      <td class="num">${fmt(reg.Incomplete)}</td>
+      <td class="num">${fmt(reg['No KYC'])}</td>
+      <td class="num"><strong>${fmt(reg.total)}</strong></td>`;
+    regionBody.appendChild(tr);
+  });
+  // Grand total row
+  const gt = document.createElement('tr');
+  gt.style.background = '#fafbff';
+  gt.innerHTML = `
+    <td><strong>Grand Total</strong></td>
+    <td class="num"><strong>${fmt(m.totalCompleted)}</strong></td>
+    <td class="num"><strong>${fmt(m.totalIncomplete)}</strong></td>
+    <td class="num"><strong>${fmt(m.totalNoKYC)}</strong></td>
+    <td class="num"><strong>${fmt(m.totalRows)}</strong></td>`;
+  regionBody.appendChild(gt);
+}
+
+// Auto-load on open
+loadData();
+</script>
+</body>
+</html>
