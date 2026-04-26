@@ -24,85 +24,40 @@ header.top {
   align-items: flex-end;
   border-bottom: 1px solid #e6e8ef;
   padding-bottom: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   gap: 16px;
   flex-wrap: wrap;
 }
-.title-block h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0 0 4px 0;
-  letter-spacing: -0.01em;
-}
-.title-block .subtitle {
-  font-size: 13px;
-  color: #5f6b85;
-}
-.meta {
-  text-align: right;
-  font-size: 12px;
-  color: #6b7591;
-  line-height: 1.6;
-}
-.meta .badge {
-  display: inline-block;
-  background: #eef1ff;
-  color: #3a52d6;
-  padding: 3px 9px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 11px;
-  margin-bottom: 4px;
-}
-.refresh-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #3a52d6;
-  color: #fff;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 6px;
-  transition: background 0.15s;
-}
+.title-block h1 { font-size: 24px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.01em; }
+.title-block .subtitle { font-size: 13px; color: #5f6b85; }
+.meta { text-align: right; font-size: 12px; color: #6b7591; line-height: 1.6; }
+.meta .badge { display: inline-block; background: #eef1ff; color: #3a52d6; padding: 3px 9px; border-radius: 12px; font-weight: 600; font-size: 11px; margin-bottom: 4px; }
+.refresh-btn { display: inline-flex; align-items: center; gap: 6px; background: #3a52d6; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 6px; transition: background 0.15s; }
 .refresh-btn:hover { background: #2c40b5; }
 .refresh-btn:disabled { background: #aab1c8; cursor: wait; }
 
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 22px;
-}
-.kpi {
+/* Filter Bar Styles */
+.filter-bar {
   background: #ffffff;
   border: 1px solid #e6e8ef;
   border-radius: 10px;
-  padding: 16px 18px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
 }
-.kpi .label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #6b7591;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-.kpi .value {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #1a1f36;
-}
-.kpi .delta {
-  font-size: 11px;
-  color: #5f6b85;
-  margin-top: 4px;
-}
+.filter-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
+.filter-group label { font-size: 11px; font-weight: 600; color: #6b7591; text-transform: uppercase; letter-spacing: 0.04em; }
+.filter-group select { padding: 8px 12px; border: 1px solid #dde1ec; border-radius: 6px; font-size: 13px; color: #1a1f36; background: #fdfdfd; cursor: pointer; outline: none; }
+.filter-group select:focus { border-color: #3a52d6; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+.kpi { background: #ffffff; border: 1px solid #e6e8ef; border-radius: 10px; padding: 16px 18px; }
+.kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7591; margin-bottom: 8px; font-weight: 600; }
+.kpi .value { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: #1a1f36; }
+.kpi .delta { font-size: 11px; color: #5f6b85; margin-top: 4px; }
 .kpi.accent-blue { border-top: 3px solid #3a52d6; }
 .kpi.accent-green { border-top: 3px solid #1f9d55; }
 .kpi.accent-amber { border-top: 3px solid #d97706; }
@@ -111,111 +66,51 @@ header.top {
 .row { display: grid; gap: 14px; margin-bottom: 14px; }
 .row.two { grid-template-columns: 2fr 1fr; }
 .row.eq  { grid-template-columns: 1fr 1fr; }
+.row.full { grid-template-columns: 1fr; }
 
-.card {
-  background: #ffffff;
-  border: 1px solid #e6e8ef;
-  border-radius: 10px;
-  padding: 16px 18px;
-}
-.card h3 {
-  font-size: 13px;
-  font-weight: 600;
-  margin: 0 0 4px 0;
-  color: #1a1f36;
-}
-.card .sub {
-  font-size: 11px;
-  color: #6b7591;
-  margin-bottom: 12px;
-}
+.card { background: #ffffff; border: 1px solid #e6e8ef; border-radius: 10px; padding: 16px 18px; }
+.card h3 { font-size: 13px; font-weight: 600; margin: 0 0 4px 0; color: #1a1f36; }
+.card .sub { font-size: 11px; color: #6b7591; margin-bottom: 12px; }
 .chart-wrap { position: relative; width: 100%; }
 .chart-wrap.h220 { height: 220px; }
 .chart-wrap.h260 { height: 260px; }
 .chart-wrap.h300 { height: 300px; }
 
-table.tbl {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12.5px;
-}
-table.tbl th, table.tbl td {
-  text-align: left;
-  padding: 8px 6px;
-  border-bottom: 1px solid #eff1f6;
-}
-table.tbl th {
-  font-weight: 600;
-  color: #6b7591;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
+/* Scrolling areas for tables */
+.scroll-area { max-height: 250px; overflow-y: auto; padding-right: 4px; }
+.scroll-area::-webkit-scrollbar { width: 6px; }
+.scroll-area::-webkit-scrollbar-thumb { background: #dde1ec; border-radius: 4px; }
+.logs-scroll { max-height: 400px; overflow-y: auto; overflow-x: auto; margin-top: 10px; border: 1px solid #eff1f6; border-radius: 6px; }
+
+table.tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+table.tbl th, table.tbl td { text-align: left; padding: 8px 6px; border-bottom: 1px solid #eff1f6; white-space: nowrap; }
+table.tbl th { font-weight: 600; color: #6b7591; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; position: sticky; top: 0; background: #fff; z-index: 10; }
 table.tbl td.num, table.tbl th.num { text-align: right; font-variant-numeric: tabular-nums; }
 table.tbl tbody tr:hover { background: #fafbff; }
-.bar-cell {
-  display: inline-block;
-  height: 8px;
-  background: linear-gradient(90deg, #3a52d6, #6b7eff);
-  border-radius: 4px;
-  vertical-align: middle;
-  margin-right: 6px;
-}
-.region-pill {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-}
+
+.bar-cell { display: inline-block; height: 8px; background: linear-gradient(90deg, #3a52d6, #6b7eff); border-radius: 4px; vertical-align: middle; margin-right: 6px; }
+.region-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
 .r-erbil { background: #eef2ff; color: #3a52d6; }
 .r-suly  { background: #ecfdf5; color: #047857; }
 .r-mosul { background: #fef3c7; color: #92400e; }
 .r-duhok { background: #ede9fe; color: #6d28d9; }
 .r-kirkuk{ background: #fee2e2; color: #b91c1c; }
 .r-other { background: #f3f4f6; color: #4b5563; }
+.kyc-pill { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.kyc-Completed { background: #ecfdf5; color: #047857; }
+.kyc-Incomplete { background: #fef3c7; color: #92400e; }
+.kyc-No { background: #ede9fe; color: #6d28d9; }
 
-.loading-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(246, 247, 251, 0.92);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  flex-direction: column;
-  gap: 14px;
-}
+.loading-overlay { position: fixed; inset: 0; background: rgba(246, 247, 251, 0.92); display: flex; align-items: center; justify-content: center; z-index: 1000; flex-direction: column; gap: 14px; }
 .loading-overlay.hidden { display: none; }
-.spinner {
-  width: 36px; height: 36px;
-  border: 3px solid #dde1ec;
-  border-top-color: #3a52d6;
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-}
+.spinner { width: 36px; height: 36px; border: 3px solid #dde1ec; border-top-color: #3a52d6; border-radius: 50%; animation: spin 0.9s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { font-size: 13px; color: #5f6b85; }
 
-.error-banner {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  font-size: 13px;
-  display: none;
-}
+.error-banner { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; display: none; }
 .error-banner.show { display: block; }
 
-footer.foot {
-  margin-top: 18px;
-  font-size: 11px;
-  color: #8a93ad;
-  text-align: center;
-  line-height: 1.6;
-}
+footer.foot { margin-top: 18px; font-size: 11px; color: #8a93ad; text-align: center; line-height: 1.6; }
 footer.foot a { color: #3a52d6; text-decoration: none; }
 
 @media (max-width: 880px) {
@@ -248,10 +143,33 @@ footer.foot a { color: #3a52d6; text-decoration: none; }
 
 <div class="error-banner" id="errorBanner"></div>
 
-<!-- KPI cards -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <label>Region</label>
+    <select id="filter-region" onchange="applyFilters()">
+      <option value="All">All Regions</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>BRM</label>
+    <select id="filter-brm" onchange="applyFilters()">
+      <option value="All">All BRMs</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>KYC Status</label>
+    <select id="filter-kyc" onchange="applyFilters()">
+      <option value="All">All Statuses</option>
+      <option value="Completed">Completed</option>
+      <option value="Incomplete">Incomplete</option>
+      <option value="No KYC">No KYC</option>
+    </select>
+  </div>
+</div>
+
 <div class="kpi-grid">
   <div class="kpi accent-blue">
-    <div class="label">Total Visits YTD</div>
+    <div class="label">Total Visits Filtered</div>
     <div class="value" id="kpi-total">—</div>
     <div class="delta" id="kpi-total-sub">—</div>
   </div>
@@ -272,59 +190,67 @@ footer.foot a { color: #3a52d6; text-decoration: none; }
   </div>
 </div>
 
-<!-- Row: Regional + Donut -->
 <div class="row two">
   <div class="card">
     <h3>Visits by Region — KYC Outcome</h3>
-    <div class="sub">Stacked totals show where field activity is concentrated and how outcomes vary across regions.</div>
+    <div class="sub">Stacked totals show where field activity is concentrated.</div>
     <div class="chart-wrap h300"><canvas id="regionChart"></canvas></div>
   </div>
   <div class="card">
     <h3>Overall KYC Status</h3>
-    <div class="sub">Share of all visits by KYC outcome.</div>
+    <div class="sub">Share of all filtered visits.</div>
     <div class="chart-wrap h300"><canvas id="kycDonut"></canvas></div>
   </div>
 </div>
 
-<!-- Row: Monthly trend + completion rate -->
+<div class="row full">
+  <div class="card">
+    <h3>Daily Visit Trend</h3>
+    <div class="sub">Granular day-by-day field activity across the selected filter.</div>
+    <div class="chart-wrap h260"><canvas id="dailyChart"></canvas></div>
+  </div>
+</div>
+
 <div class="row two">
   <div class="card">
-    <h3>Monthly Visit Trend</h3>
-    <div class="sub">Daily visits aggregated by month from form timestamps.</div>
+    <h3>Monthly Visit Volume</h3>
+    <div class="sub">Total visits aggregated by month.</div>
     <div class="chart-wrap h260"><canvas id="monthlyChart"></canvas></div>
   </div>
   <div class="card">
     <h3>KYC Completion Rate by Region</h3>
-    <div class="sub">% of regional visits that resulted in completed KYC.</div>
+    <div class="sub">% of regional visits resulting in completed KYC.</div>
     <div class="chart-wrap h260"><canvas id="rateChart"></canvas></div>
   </div>
 </div>
 
-<!-- Row: Categories + BRM leaderboard -->
 <div class="row eq">
   <div class="card">
     <h3>Top Business Categories</h3>
-    <div class="sub">Most-visited merchant categories across the field force.</div>
-    <table class="tbl">
-      <thead><tr><th>Category</th><th class="num">Share</th><th class="num">Volume</th></tr></thead>
-      <tbody id="catBody"></tbody>
-    </table>
+    <div class="sub">Most-visited merchant categories.</div>
+    <div class="scroll-area">
+      <table class="tbl">
+        <thead><tr><th>Category</th><th class="num">Share</th><th class="num">Volume</th></tr></thead>
+        <tbody id="catBody"></tbody>
+      </table>
+    </div>
   </div>
   <div class="card">
-    <h3>Most Active BRMs</h3>
-    <div class="sub">Field representatives with the highest visit volume.</div>
-    <table class="tbl">
-      <thead><tr><th>BRM</th><th>Region</th><th class="num">Visits</th></tr></thead>
-      <tbody id="brmBody"></tbody>
-    </table>
+    <h3>Active BRMs (All)</h3>
+    <div class="sub">Full leaderboard of field representatives.</div>
+    <div class="scroll-area">
+      <table class="tbl">
+        <thead><tr><th>BRM</th><th>Region</th><th class="num">Visits</th></tr></thead>
+        <tbody id="brmBody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<!-- Row: Account type + Region table -->
 <div class="row eq">
   <div class="card">
     <h3>New vs. Existing Accounts</h3>
-    <div class="sub">Mix of acquisition (new) versus servicing/expansion (existing) visits.</div>
+    <div class="sub">Mix of acquisition versus servicing visits.</div>
     <div class="chart-wrap h220"><canvas id="acctChart"></canvas></div>
   </div>
   <div class="card">
@@ -339,6 +265,19 @@ footer.foot a { color: #3a52d6; text-decoration: none; }
   </div>
 </div>
 
+<div class="card">
+  <h3>Recent Visit Logs</h3>
+  <div class="sub">Raw data view of the latest filtered activity. Showing up to 200 most recent records.</div>
+  <div class="logs-scroll">
+    <table class="tbl">
+      <thead>
+        <tr><th>Date</th><th>Region</th><th>BRM</th><th>Category</th><th>Account Type</th><th>KYC Status</th></tr>
+      </thead>
+      <tbody id="logsBody"></tbody>
+    </table>
+  </div>
+</div>
+
 <footer class="foot">
   Live data from <a href="https://docs.google.com/spreadsheets/d/1SzaRHz9s5Ri8mV2B1qMKl7txwOm6i718wUhXAgGDLbQ/edit?usp=sharing" target="_blank">Daily Visit 2026 - Business</a> ·
   Dashboard refreshes from the sheet on every page load.
@@ -348,25 +287,18 @@ footer.foot a { color: #3a52d6; text-decoration: none; }
 
 <script>
 // ============================================================
-// CONFIG — Google Sheets live data source
+// CONFIG & GLOBAL STATE
 // ============================================================
 const SHEET_ID = '1SzaRHz9s5Ri8mV2B1qMKl7txwOm6i718wUhXAgGDLbQ';
-// gviz CSV endpoint - fetches the first sheet of a "anyone with the link can view" Google Sheet
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Form%20Responses%201`;
 
-const COLORS = {
-  completed: '#1f9d55',
-  incomplete: '#d97706',
-  noKyc:     '#7c3aed',
-  blue:      '#3a52d6',
-  blueLight: '#6b7eff',
-  gray:      '#cfd4e2'
-};
+const COLORS = { completed: '#1f9d55', incomplete: '#d97706', noKyc: '#7c3aed', blue: '#3a52d6', blueLight: '#6b7eff' };
 const REGION_ORDER = ['Suly', 'Erbil', 'Mosul', 'Duhok', 'Kirkuk'];
 const REGION_PILL = { 'Suly':'r-suly','Erbil':'r-erbil','Mosul':'r-mosul','Duhok':'r-duhok','Kirkuk':'r-kirkuk' };
 
-// Track Chart.js instances so we can destroy/redraw on refresh
 const charts = {};
+let GLOBAL_ROWS = [];
+let COL_MAP = {}; 
 
 // ============================================================
 // LOAD + PARSE
@@ -378,28 +310,37 @@ async function loadData() {
   loader.classList.remove('hidden');
   errBanner.classList.remove('show');
   btn.disabled = true;
-  document.getElementById('loadingText').textContent = 'Fetching the latest data from Google Sheets…';
 
   try {
     const resp = await fetch(SHEET_URL, { cache: 'no-store' });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status} — sheet may not be shared "anyone with link can view"`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} — access denied`);
     const csv = await resp.text();
 
-    document.getElementById('loadingText').textContent = 'Parsing rows…';
     const parsed = Papa.parse(csv, { header: true, skipEmptyLines: true });
     if (!parsed.data || !parsed.data.length) throw new Error('Sheet returned no rows');
 
-    document.getElementById('loadingText').textContent = 'Computing metrics…';
-    const rows = parsed.data;
-    const metrics = computeMetrics(rows);
-    render(metrics);
+    GLOBAL_ROWS = parsed.data;
+    
+    const headers = Object.keys(GLOBAL_ROWS[0]);
+    const findHeader = (keywords) => {
+      const lower = keywords.map(k => k.toLowerCase());
+      return headers.find(h => lower.every(k => h.toLowerCase().includes(k)));
+    };
+    COL_MAP.ts = findHeader(['column']) || headers[0];
+    COL_MAP.region = findHeader(['region']);
+    COL_MAP.brm = findHeader(['brm']) || findHeader(['responsible']);
+    COL_MAP.cat = findHeader(['business','category']);
+    COL_MAP.kyc = findHeader(['kyc']) || findHeader(['status']);
+    COL_MAP.acct = findHeader(['account','type']);
 
-    const now = new Date();
-    document.getElementById('lastUpdated').textContent = 'Last updated: ' + now.toLocaleString();
+    initFilters();
+    applyFilters();
+
+    document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString();
     loader.classList.add('hidden');
   } catch (err) {
     console.error(err);
-    errBanner.textContent = '⚠ Could not load live data: ' + err.message + '. Make sure the Google Sheet sharing is set to "Anyone with the link · Viewer".';
+    errBanner.textContent = '⚠ Could not load live data: ' + err.message;
     errBanner.classList.add('show');
     loader.classList.add('hidden');
   } finally {
@@ -408,17 +349,64 @@ async function loadData() {
 }
 
 // ============================================================
-// METRICS — aggregations
+// FILTERS
+// ============================================================
+function initFilters() {
+  const regions = new Set();
+  const brms = new Set();
+  
+  GLOBAL_ROWS.forEach(r => {
+    const reg = classifyRegion(r[COL_MAP.region]);
+    const brm = normalize(r[COL_MAP.brm]);
+    if (reg) regions.add(reg);
+    if (brm) brms.add(brm);
+  });
+
+  const regSelect = document.getElementById('filter-region');
+  const brmSelect = document.getElementById('filter-brm');
+  
+  regSelect.innerHTML = '<option value="All">All Regions</option>';
+  brmSelect.innerHTML = '<option value="All">All BRMs</option>';
+
+  [...regions].sort().forEach(r => regSelect.add(new Option(r, r)));
+  [...brms].sort().forEach(b => brmSelect.add(new Option(b, b)));
+}
+
+function applyFilters() {
+  const fReg = document.getElementById('filter-region').value;
+  const fBrm = document.getElementById('filter-brm').value;
+  const fKyc = document.getElementById('filter-kyc').value;
+
+  const filtered = GLOBAL_ROWS.filter(r => {
+    const rReg = classifyRegion(r[COL_MAP.region]);
+    const rBrm = normalize(r[COL_MAP.brm]);
+    const rKyc = classifyKYC(r[COL_MAP.kyc]);
+
+    if (!rReg) return false;
+
+    const matchReg = (fReg === 'All' || rReg === fReg);
+    const matchBrm = (fBrm === 'All' || rBrm === fBrm);
+    const matchKyc = (fKyc === 'All' || rKyc === fKyc);
+
+    return matchReg && matchBrm && matchKyc;
+  });
+
+  const metrics = computeMetrics(filtered);
+  render(metrics);
+  renderLogs(filtered);
+}
+
+// ============================================================
+// UTILS & METRICS
 // ============================================================
 function normalize(v) { return (v == null ? '' : String(v)).trim(); }
 
 function classifyKYC(v) {
   const s = normalize(v).toLowerCase();
-  if (!s) return null;
   if (s.startsWith('comple')) return 'Completed';
   if (s.startsWith('incomp')) return 'Incomplete';
   if (s.startsWith('no'))     return 'No KYC';
-  return null;
+  return 'No KYC'; 
 }
 
 function classifyRegion(v) {
@@ -437,91 +425,65 @@ function classifyAcctType(v) {
   const s = normalize(v).toLowerCase();
   if (s.startsWith('new')) return 'New';
   if (s.startsWith('exist')) return 'Existing';
-  return null;
+  return 'Unknown';
 }
 
 function parseTimestamp(v) {
-  // Format observed: "12/24/2025 18:30:55" (M/D/YYYY)
   const s = normalize(v);
   if (!s) return null;
-  // Try Date.parse fallback first for ISO-like
   const d = new Date(s);
   if (!isNaN(d)) return d;
-  // Manual M/D/YYYY parsing
   const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (m) return new Date(+m[3], +m[1]-1, +m[2]);
   return null;
 }
 
 function computeMetrics(rows) {
-  // Identify columns by header (Google Sheets gviz CSV preserves headers)
-  const sample = rows[0] || {};
-  const headers = Object.keys(sample);
-  const findHeader = (keywords) => {
-    const lower = keywords.map(k => k.toLowerCase());
-    return headers.find(h => {
-      const hl = h.toLowerCase();
-      return lower.every(k => hl.includes(k));
-    });
-  };
-  const COL_TS       = findHeader(['column']) || headers[0]; // first column is timestamp
-  const COL_REGION   = findHeader(['region']);
-  const COL_BRM      = findHeader(['brm']) || findHeader(['responsible']);
-  const COL_CAT      = findHeader(['business','category']);
-  const COL_KYC      = findHeader(['kyc','status']);
-  const COL_ACCTYPE  = findHeader(['account','type']);
-
   const byRegion = {};
   const byMonth  = {};
+  const byDay    = {};
   const byCat    = {};
   const byBRM    = {};
   let totalCompleted = 0, totalIncomplete = 0, totalNoKYC = 0, totalAcctNew = 0, totalAcctExisting = 0;
-  let totalRows = 0;
-
+  
   rows.forEach(r => {
-    // Skip blank/summary rows (heuristic: needs a region or timestamp)
-    const region = classifyRegion(r[COL_REGION]);
-    const ts = parseTimestamp(r[COL_TS]);
-    if (!region && !ts) return;
-    if (!region) return; // Region is required for almost all charts
-    totalRows++;
-
-    // KYC
-    const kyc = classifyKYC(r[COL_KYC]);
+    const region = classifyRegion(r[COL_MAP.region]);
+    const ts = parseTimestamp(r[COL_MAP.ts]);
+    const kyc = classifyKYC(r[COL_MAP.kyc]);
+    
     if (!byRegion[region]) byRegion[region] = { Completed: 0, Incomplete: 0, 'No KYC': 0, total: 0 };
     byRegion[region].total++;
-    if (kyc) {
-      byRegion[region][kyc]++;
-      if (kyc === 'Completed') totalCompleted++;
-      else if (kyc === 'Incomplete') totalIncomplete++;
-      else if (kyc === 'No KYC') totalNoKYC++;
-    }
+    byRegion[region][kyc]++;
+    
+    if (kyc === 'Completed') totalCompleted++;
+    else if (kyc === 'Incomplete') totalIncomplete++;
+    else if (kyc === 'No KYC') totalNoKYC++;
 
-    // Monthly bucket
     if (ts) {
-      const key = ts.getFullYear() + '-' + String(ts.getMonth()+1).padStart(2,'0');
-      byMonth[key] = (byMonth[key] || 0) + 1;
+      // Monthly aggregation
+      const monthKey = ts.getFullYear() + '-' + String(ts.getMonth()+1).padStart(2,'0');
+      byMonth[monthKey] = (byMonth[monthKey] || 0) + 1;
+
+      // Daily aggregation
+      const dayKey = ts.getFullYear() + '-' + String(ts.getMonth()+1).padStart(2,'0') + '-' + String(ts.getDate()).padStart(2,'0');
+      byDay[dayKey] = (byDay[dayKey] || 0) + 1;
     }
 
-    // Category
-    const cat = normalize(r[COL_CAT]);
+    const cat = normalize(r[COL_MAP.cat]);
     if (cat) byCat[cat] = (byCat[cat] || 0) + 1;
 
-    // BRM
-    const brm = normalize(r[COL_BRM]);
+    const brm = normalize(r[COL_MAP.brm]);
     if (brm) {
       if (!byBRM[brm]) byBRM[brm] = { name: brm, region, visits: 0, regions: {} };
       byBRM[brm].visits++;
       byBRM[brm].regions[region] = (byBRM[brm].regions[region] || 0) + 1;
     }
 
-    // Account type
-    const acct = classifyAcctType(r[COL_ACCTYPE]);
+    const acct = classifyAcctType(r[COL_MAP.acct]);
     if (acct === 'New') totalAcctNew++;
     else if (acct === 'Existing') totalAcctExisting++;
   });
 
-  // BRM dominant region
   Object.values(byBRM).forEach(b => {
     let best = null, bestCount = 0;
     for (const [r, c] of Object.entries(b.regions)) {
@@ -530,56 +492,38 @@ function computeMetrics(rows) {
     b.region = best;
   });
 
-  // Sort categories & BRMs
-  const catList = Object.entries(byCat)
-    .map(([name, vol]) => ({ name, vol }))
-    .sort((a, b) => b.vol - a.vol)
-    .slice(0, 10);
-
-  const brmList = Object.values(byBRM)
-    .sort((a, b) => b.visits - a.visits)
-    .slice(0, 10);
-
-  // Sort months chronologically
-  const monthKeys = Object.keys(byMonth).sort();
-
   return {
-    totalRows,
+    totalRows: rows.length,
     totalCompleted, totalIncomplete, totalNoKYC,
     totalAcctNew, totalAcctExisting,
-    byRegion, monthKeys, byMonth,
-    catList, brmList,
+    byRegion, 
+    monthKeys: Object.keys(byMonth).sort(), byMonth,
+    dayKeys: Object.keys(byDay).sort(), byDay,
+    catList: Object.entries(byCat).map(([name, vol]) => ({ name, vol })).sort((a, b) => b.vol - a.vol),
+    brmList: Object.values(byBRM).sort((a, b) => b.visits - a.visits),
     nRegions: Object.keys(byRegion).length,
     nBRMs: Object.keys(byBRM).length
   };
 }
 
 // ============================================================
-// RENDER
+// RENDER CHARTS
 // ============================================================
 function fmt(n) { return n.toLocaleString(); }
 function pct(n, total) { return total ? (n/total*100).toFixed(1) + '%' : '—'; }
 function destroyChart(key) { if (charts[key]) { charts[key].destroy(); delete charts[key]; } }
 
 function render(m) {
-  // KPIs
   document.getElementById('kpi-total').textContent = fmt(m.totalRows);
-  document.getElementById('kpi-total-sub').textContent =
-    `Across ${m.nRegions} regions · ${m.nBRMs} active BRMs · ${m.catList.length}+ categories`;
-  document.getElementById('kpi-completed').innerHTML =
-    fmt(m.totalCompleted) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalCompleted, m.totalRows)}</span>`;
-  document.getElementById('kpi-incomplete').innerHTML =
-    fmt(m.totalIncomplete) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalIncomplete, m.totalRows)}</span>`;
-  document.getElementById('kpi-nokyc').innerHTML =
-    fmt(m.totalNoKYC) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalNoKYC, m.totalRows)}</span>`;
+  document.getElementById('kpi-total-sub').textContent = `Filtered subset`;
+  document.getElementById('kpi-completed').innerHTML = fmt(m.totalCompleted) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalCompleted, m.totalRows)}</span>`;
+  document.getElementById('kpi-incomplete').innerHTML = fmt(m.totalIncomplete) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalIncomplete, m.totalRows)}</span>`;
+  document.getElementById('kpi-nokyc').innerHTML = fmt(m.totalNoKYC) + ` <span style="font-size:14px;color:#5f6b85;font-weight:500">· ${pct(m.totalNoKYC, m.totalRows)}</span>`;
 
-  // Region order: known first, then any extras by total desc
   const knownRegions = REGION_ORDER.filter(r => m.byRegion[r]);
-  const extraRegions = Object.keys(m.byRegion).filter(r => !REGION_ORDER.includes(r))
-    .sort((a,b) => m.byRegion[b].total - m.byRegion[a].total);
+  const extraRegions = Object.keys(m.byRegion).filter(r => !REGION_ORDER.includes(r)).sort((a,b) => m.byRegion[b].total - m.byRegion[a].total);
   const regions = knownRegions.concat(extraRegions);
 
-  // Region stacked bar
   destroyChart('region');
   charts.region = new Chart(document.getElementById('regionChart'), {
     type: 'bar',
@@ -591,174 +535,125 @@ function render(m) {
         { label: 'No KYC',     data: regions.map(r => m.byRegion[r]['No KYC']),    backgroundColor: COLORS.noKyc }
       ]
     },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
-        tooltip: { callbacks: { footer: (items) => 'Total: ' + items.reduce((s,i)=>s+i.parsed.x,0) } }
-      },
-      scales: {
-        x: { stacked: true, grid: { color: '#eef1f6' }, ticks: { font: { size: 11 } } },
-        y: { stacked: true, grid: { display: false }, ticks: { font: { size: 12, weight: '600' } } }
-      }
-    }
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
   });
 
-  // KYC donut
   destroyChart('kyc');
   charts.kyc = new Chart(document.getElementById('kycDonut'), {
     type: 'doughnut',
     data: {
       labels: ['Completed', 'Incomplete', 'No KYC'],
-      datasets: [{
-        data: [m.totalCompleted, m.totalIncomplete, m.totalNoKYC],
-        backgroundColor: [COLORS.completed, COLORS.incomplete, COLORS.noKyc],
-        borderWidth: 2, borderColor: '#fff'
-      }]
+      datasets: [{ data: [m.totalCompleted, m.totalIncomplete, m.totalNoKYC], backgroundColor: [COLORS.completed, COLORS.incomplete, COLORS.noKyc], borderWidth: 2 }]
     },
-    options: {
-      responsive: true, maintainAspectRatio: false, cutout: '62%',
-      plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
-        tooltip: { callbacks: { label: (c) => `${c.label}: ${fmt(c.parsed)} (${pct(c.parsed, m.totalRows)})` } }
-      }
-    }
+    options: { responsive: true, maintainAspectRatio: false, cutout: '62%' }
   });
 
-  // Monthly trend
-  destroyChart('monthly');
-  const monthLabels = m.monthKeys.map(k => {
-    const [y, mo] = k.split('-');
-    const dt = new Date(+y, +mo - 1, 1);
-    return dt.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  // DAILY TREND CHART
+  destroyChart('daily');
+  const dayLabels = m.dayKeys.map(k => {
+    const [y, mo, d] = k.split('-');
+    return new Date(+y, +mo - 1, +d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   });
-  charts.monthly = new Chart(document.getElementById('monthlyChart'), {
-    type: 'bar',
+  charts.daily = new Chart(document.getElementById('dailyChart'), {
+    type: 'line',
     data: {
-      labels: monthLabels,
+      labels: dayLabels,
       datasets: [{
         label: 'Visits',
-        data: m.monthKeys.map(k => m.byMonth[k]),
-        backgroundColor: COLORS.blue,
-        borderRadius: 4
+        data: m.dayKeys.map(k => m.byDay[k]),
+        borderColor: COLORS.blue,
+        backgroundColor: 'rgba(58, 82, 214, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        pointRadius: 3,
+        pointBackgroundColor: COLORS.blue,
+        tension: 0.3
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 }, maxTicksLimit: 15 } },
         y: { beginAtZero: true, grid: { color: '#eef1f6' }, ticks: { font: { size: 11 } } }
       }
     }
   });
 
-  // Completion rate by region
-  destroyChart('rate');
-  const ratePct = regions.map(r => {
-    const reg = m.byRegion[r];
-    return reg.total ? +(reg.Completed / reg.total * 100).toFixed(1) : 0;
+  destroyChart('monthly');
+  const monthLabels = m.monthKeys.map(k => {
+    const [y, mo] = k.split('-');
+    return new Date(+y, +mo - 1, 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
   });
+  charts.monthly = new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: { labels: monthLabels, datasets: [{ label: 'Visits', data: m.monthKeys.map(k => m.byMonth[k]), backgroundColor: COLORS.blue, borderRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+  });
+
+  destroyChart('rate');
+  const ratePct = regions.map(r => { const reg = m.byRegion[r]; return reg.total ? +(reg.Completed / reg.total * 100).toFixed(1) : 0; });
   charts.rate = new Chart(document.getElementById('rateChart'), {
     type: 'bar',
-    data: {
-      labels: regions,
-      datasets: [{
-        label: 'KYC Completion %',
-        data: ratePct,
-        backgroundColor: ratePct.map(v => v >= 70 ? COLORS.completed : v >= 40 ? COLORS.blue : COLORS.incomplete),
-        borderRadius: 4
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.parsed.y + '% completed' } } },
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { size: 11, weight: '600' } } },
-        y: { beginAtZero: true, max: 100, grid: { color: '#eef1f6' }, ticks: { callback: v => v + '%', font: { size: 11 } } }
-      }
-    }
+    data: { labels: regions, datasets: [{ label: 'KYC Completion %', data: ratePct, backgroundColor: ratePct.map(v => v >= 70 ? COLORS.completed : v >= 40 ? COLORS.blue : COLORS.incomplete), borderRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { max: 100 } } }
   });
 
-  // Categories
   const catBody = document.getElementById('catBody');
   catBody.innerHTML = '';
-  const maxCat = Math.max(...m.catList.map(c => c.vol), 1);
+  const maxCat = m.catList.length > 0 ? Math.max(...m.catList.map(c => c.vol), 1) : 1;
   m.catList.forEach(c => {
-    const share = (c.vol / m.totalRows * 100);
     const w = Math.max(8, (c.vol / maxCat) * 100);
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${c.name}</td>
-      <td class="num">${share.toFixed(1)}%</td>
-      <td class="num"><span class="bar-cell" style="width:${w*0.8}px"></span>${fmt(c.vol)}</td>`;
-    catBody.appendChild(tr);
+    catBody.innerHTML += `<tr><td>${c.name}</td><td class="num">${(c.vol / m.totalRows * 100).toFixed(1)}%</td><td class="num"><span class="bar-cell" style="width:${w*0.8}px"></span>${fmt(c.vol)}</td></tr>`;
   });
 
-  // BRMs
   const brmBody = document.getElementById('brmBody');
   brmBody.innerHTML = '';
   m.brmList.forEach(b => {
-    const pill = REGION_PILL[b.region] || 'r-other';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${b.name}</td>
-      <td><span class="region-pill ${pill}">${b.region || '—'}</span></td>
-      <td class="num"><strong>${fmt(b.visits)}</strong></td>`;
-    brmBody.appendChild(tr);
+    brmBody.innerHTML += `<tr><td>${b.name}</td><td><span class="region-pill ${REGION_PILL[b.region] || 'r-other'}">${b.region || '—'}</span></td><td class="num"><strong>${fmt(b.visits)}</strong></td></tr>`;
   });
 
-  // Account type
   destroyChart('acct');
   charts.acct = new Chart(document.getElementById('acctChart'), {
     type: 'bar',
-    data: {
-      labels: ['New Accounts', 'Existing Accounts'],
-      datasets: [{
-        label: 'Visits',
-        data: [m.totalAcctNew, m.totalAcctExisting],
-        backgroundColor: [COLORS.blue, COLORS.blueLight],
-        borderRadius: 4
-      }]
-    },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: (c) => `${fmt(c.parsed.x)} visits (${pct(c.parsed.x, m.totalAcctNew + m.totalAcctExisting)})` } }
-      },
-      scales: {
-        x: { beginAtZero: true, grid: { color: '#eef1f6' }, ticks: { font: { size: 11 } } },
-        y: { grid: { display: false }, ticks: { font: { size: 12, weight: '600' } } }
-      }
-    }
+    data: { labels: ['New Accounts', 'Existing Accounts'], datasets: [{ label: 'Visits', data: [m.totalAcctNew, m.totalAcctExisting], backgroundColor: [COLORS.blue, COLORS.blueLight], borderRadius: 4 }] },
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
   });
 
-  // Region table
   const regionBody = document.getElementById('regionBody');
   regionBody.innerHTML = '';
   regions.forEach(r => {
     const reg = m.byRegion[r];
-    const pill = REGION_PILL[r] || 'r-other';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><span class="region-pill ${pill}">${r}</span></td>
-      <td class="num">${fmt(reg.Completed)}</td>
-      <td class="num">${fmt(reg.Incomplete)}</td>
-      <td class="num">${fmt(reg['No KYC'])}</td>
-      <td class="num"><strong>${fmt(reg.total)}</strong></td>`;
-    regionBody.appendChild(tr);
+    regionBody.innerHTML += `<tr><td><span class="region-pill ${REGION_PILL[r] || 'r-other'}">${r}</span></td><td class="num">${fmt(reg.Completed)}</td><td class="num">${fmt(reg.Incomplete)}</td><td class="num">${fmt(reg['No KYC'])}</td><td class="num"><strong>${fmt(reg.total)}</strong></td></tr>`;
   });
-  // Grand total row
-  const gt = document.createElement('tr');
-  gt.style.background = '#fafbff';
-  gt.innerHTML = `
-    <td><strong>Grand Total</strong></td>
-    <td class="num"><strong>${fmt(m.totalCompleted)}</strong></td>
-    <td class="num"><strong>${fmt(m.totalIncomplete)}</strong></td>
-    <td class="num"><strong>${fmt(m.totalNoKYC)}</strong></td>
-    <td class="num"><strong>${fmt(m.totalRows)}</strong></td>`;
-  regionBody.appendChild(gt);
+}
+
+// ============================================================
+// RENDER LOGS
+// ============================================================
+function renderLogs(rows) {
+  const tbody = document.getElementById('logsBody');
+  tbody.innerHTML = '';
+  
+  const displayRows = rows.slice(-200).reverse(); 
+
+  displayRows.forEach(r => {
+    const kyc = classifyKYC(r[COL_MAP.kyc]);
+    const kycClass = kyc === 'Completed' ? 'kyc-Completed' : kyc === 'Incomplete' ? 'kyc-Incomplete' : 'kyc-No';
+    const reg = classifyRegion(r[COL_MAP.region]) || '—';
+    const pill = REGION_PILL[reg] || 'r-other';
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${normalize(r[COL_MAP.ts])}</td>
+        <td><span class="region-pill ${pill}">${reg}</span></td>
+        <td>${normalize(r[COL_MAP.brm])}</td>
+        <td>${normalize(r[COL_MAP.cat]) || '—'}</td>
+        <td>${normalize(r[COL_MAP.acct]) || '—'}</td>
+        <td><span class="kyc-pill ${kycClass}">${kyc}</span></td>
+      </tr>
+    `;
+  });
 }
 
 // Auto-load on open
